@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0a0a0c">
+<title>Star of Olimp</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0c;color:#fafafa;min-height:100dvh;padding-bottom:76px;-webkit-font-smoothing:antialiased;color-scheme:dark}
+html,body,main,.screen,.card,.card-bal,h1,h2,p,span,div,button,label{color:inherit}
+h1{color:#fafafa!important}
+.sub,.muted,.stat-l,.back,.fs11.muted{color:#c8c8d0!important}
+.fw7,.fs14.fw7,button.card{color:#fafafa}
+.card,.card-bal{color:#fafafa}
+svg{display:block;flex-shrink:0;transition:transform .25s cubic-bezier(.34,1.56,.64,1),opacity .2s}
+.header{position:sticky;top:0;z-index:50;background:rgba(14,14,18,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06);padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+
+/* Logo — осветление */
+.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,#f5c542,#e09810);display:flex;align-items:center;justify-content:center;box-shadow:0 4px 16px rgba(245,197,66,.35);cursor:pointer;user-select:none;-webkit-user-select:none;transition:transform .2s,box-shadow .3s,filter .3s;animation:logoBright 2.6s ease-in-out infinite}
+.logo:active{transform:scale(.9);filter:brightness(1.3);box-shadow:0 0 28px rgba(245,197,66,.75)}
+.logo svg{width:20px;height:20px;stroke:#0a0a0a;fill:none;stroke-width:2.2}
+@keyframes logoBright{0%,100%{filter:brightness(1);box-shadow:0 4px 14px rgba(245,197,66,.28)}50%{filter:brightness(1.2);box-shadow:0 0 24px rgba(245,197,66,.7)}}
+
+/* Checklist */
+.req-list{margin:0;padding:0;list-style:none}
+.req-list li{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px;transition:transform .2s}
+.req-list li:last-child{border-bottom:none}
+.req-check{width:22px;height:22px;border-radius:50%;border:2px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:700;transition:all .3s cubic-bezier(.34,1.56,.64,1)}
+.req-check.ok{border-color:#34d399;background:rgba(52,211,153,.2);color:#34d399;box-shadow:0 0 12px rgba(52,211,153,.35);animation:checkBright .45s ease}
+.req-check.no{border-color:rgba(255,255,255,.12);color:transparent}
+@keyframes checkBright{0%{filter:brightness(.6);box-shadow:0 0 0 transparent;opacity:.5}100%{filter:brightness(1.2);box-shadow:0 0 12px rgba(52,211,153,.4);opacity:1}}
+.hint-box{background:rgba(245,197,66,.08);border:1px solid rgba(245,197,66,.2);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:12px;line-height:1.55;color:#e4e4e7;animation:fadeSlide .45s ease}
+.daily-locked #btnDaily{opacity:.5;pointer-events:none}
+.avatar-lg{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,#f5c542,#e09810);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(245,197,66,.3);overflow:hidden;animation:logoBright 2.6s ease-in-out infinite}
+.avatar-lg img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar-sm{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#f5c542,#e09810);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.avatar-sm img{width:100%;height:100%;object-fit:cover;display:block}
+.avatar-sm svg{width:16px;height:16px;stroke:#0a0a0a}
+.user-row{display:flex;align-items:center;gap:12px}
+
+/* Chips — осветление иконок */
+.chip{background:#15151c;border:1px solid rgba(255,255,255,.07);border-radius:999px;padding:6px 11px;display:flex;align-items:center;gap:5px;font-size:13px;font-weight:700;color:#fafafa;transition:transform .2s,border-color .25s,box-shadow .25s,filter .25s}
+.chip:active{transform:scale(.94);filter:brightness(1.15);border-color:rgba(245,197,66,.25)}
+.chip svg{width:14px;height:14px;animation:iconBright 2.2s ease-in-out infinite}
+.chip:nth-child(2) svg{animation-delay:.35s}
+@keyframes iconBright{0%,100%{filter:brightness(1);opacity:.9}50%{filter:brightness(1.45);opacity:1}}
+
+.main{max-width:480px;margin:0 auto;padding:16px}
+.card{background:#111116;border:1px solid rgba(255,255,255,.06);border-radius:18px;padding:16px;margin-bottom:10px;transition:transform .25s,border-color .25s,box-shadow .25s}
+.card:active{transform:scale(.985)}
+.card-bal{background:#111116;border:1px solid rgba(255,255,255,.06);border-radius:22px;padding:20px;margin-bottom:16px;position:relative;overflow:hidden;animation:fadeSlide .5s ease}
+.card-bal::before{content:'';position:absolute;right:-40px;top:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(245,197,66,.14),transparent 70%);animation:orbBright 4s ease-in-out infinite}
+@keyframes orbBright{0%,100%{opacity:.7;filter:brightness(1)}50%{opacity:1;filter:brightness(1.5)}}
+
+/* Buttons — сильное осветление */
+.btn{background:linear-gradient(135deg,#f5c542,#e09810);color:#0a0a0a;font-weight:700;border:none;border-radius:14px;padding:13px 16px;font-size:14px;cursor:pointer;box-shadow:0 4px 14px rgba(245,197,66,.28);display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:transform .2s,box-shadow .3s,filter .3s;position:relative;overflow:hidden;animation:btnBright 2.2s ease-in-out infinite}
+.btn::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-120%);pointer-events:none}
+.btn:active{transform:scale(.96);filter:brightness(1.35)!important;box-shadow:0 0 28px rgba(245,197,66,.7)!important}
+.btn:active::after{animation:shimmer .45s ease}
+.btn:disabled{opacity:.4;pointer-events:none;animation:none;filter:none!important;box-shadow:none}
+@keyframes shimmer{from{transform:translateX(-120%)}to{transform:translateX(120%)}}
+@keyframes btnBright{
+  0%,100%{filter:brightness(1);box-shadow:0 4px 14px rgba(245,197,66,.25)}
+  50%{filter:brightness(1.22);box-shadow:0 0 26px rgba(245,197,66,.55)}
+}
+.btn-out{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.12);color:#f4f4f5;font-weight:600;border-radius:14px;padding:13px 16px;font-size:14px;cursor:pointer;transition:transform .2s,background .3s,border-color .3s,filter .3s,box-shadow .3s;animation:btnOutBright 2.4s ease-in-out infinite;position:relative;overflow:hidden}
+.btn-out::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.12) 50%,transparent 70%);transform:translateX(-120%);pointer-events:none}
+.btn-out:active{transform:scale(.96);filter:brightness(1.3)!important;background:rgba(255,255,255,.1)!important;border-color:rgba(245,197,66,.35)!important;box-shadow:0 0 18px rgba(245,197,66,.2)!important}
+.btn-out:active::after{animation:shimmer .45s ease}
+@keyframes btnOutBright{
+  0%,100%{filter:brightness(1);border-color:rgba(255,255,255,.12);box-shadow:0 0 0 transparent}
+  50%{filter:brightness(1.18);border-color:rgba(255,255,255,.22);box-shadow:0 0 14px rgba(255,255,255,.06)}
+}
+.btn-sm{padding:8px 14px;font-size:12px;border-radius:10px}
+.row{display:flex;gap:10px}.row>*{flex:1}
+
+/* Quick actions — осветление */
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+.qa{background:#15151c;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px 4px;display:flex;flex-direction:column;align-items:center;gap:8px;font-size:11px;font-weight:600;color:#e4e4e7;cursor:pointer;transition:transform .2s,border-color .25s,background .25s,filter .25s,box-shadow .25s}
+.qa:active{transform:scale(.94);filter:brightness(1.2);border-color:rgba(255,255,255,.14);box-shadow:0 0 18px rgba(245,197,66,.12)}
+.qa:active .qa-icon{filter:brightness(1.35)}
+.qa-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;transition:filter .3s,box-shadow .3s}
+.qa-icon svg{width:20px;height:20px;transition:filter .3s}
+.qa:nth-child(1) .qa-icon{animation:iconBright 2.4s ease-in-out infinite}
+.qa:nth-child(2) .qa-icon{animation:iconBright 2.4s ease-in-out .2s infinite}
+.qa:nth-child(3) .qa-icon{animation:iconBright 2.4s ease-in-out .4s infinite}
+.qa:nth-child(4) .qa-icon{animation:iconBright 2.4s ease-in-out .6s infinite}
+
+/* Screens */
+.screen{display:none}.screen.active{display:block;animation:up .32s cubic-bezier(.22,1,.36,1)}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeSlide{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* Nav — осветление активной иконки */
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(14,14,18,.96);backdrop-filter:blur(16px);border-top:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-around;padding:10px 0 max(10px,env(safe-area-inset-bottom))}
+.nav button{background:none;border:none;color:#d4d4d8;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:700;padding:2px 12px;cursor:pointer;transition:color .3s,filter .3s,transform .2s}
+.nav button svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;transition:filter .35s,stroke-width .25s,drop-shadow .35s}
+.nav button:active{transform:scale(.94);filter:brightness(1.25)}
+.nav button.active{color:#f5c542}
+.nav button.active svg{stroke-width:2.15;filter:brightness(1.35) drop-shadow(0 0 8px rgba(245,197,66,.55));animation:navGlow .5s ease}
+@keyframes navGlow{0%{filter:brightness(.8) drop-shadow(0 0 0 transparent)}100%{filter:brightness(1.35) drop-shadow(0 0 8px rgba(245,197,66,.55))}}
+
+input,textarea{width:100%;background:#15151c;border:1px solid rgba(255,255,255,.08);color:#f4f4f5;border-radius:14px;padding:14px 16px;font-size:14px;font-family:inherit;outline:none;margin-bottom:12px;transition:border-color .25s,box-shadow .25s}
+input:focus,textarea:focus{border-color:rgba(245,197,66,.45);box-shadow:0 0 0 3px rgba(245,197,66,.1)}
+label{font-size:12px;font-weight:600;color:#d4d4d8;display:block;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:999px;background:rgba(245,197,66,.12);color:#f5c542}
+
+/* Toast */
+.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%) translateY(-140%) scale(.92);z-index:200;background:#15151c;border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:12px 18px;font-size:13px;font-weight:600;transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .3s;max-width:90%;box-shadow:0 8px 28px rgba(0,0,0,.4);opacity:0}
+.toast.show{transform:translateX(-50%) translateY(0) scale(1);opacity:1}
+
+.empty{text-align:center;padding:48px 16px;color:#a1a1aa}
+.empty svg{width:48px;height:48px;margin:0 auto 12px;opacity:.55;stroke:#a1a1aa;fill:none;stroke-width:1.5;animation:emptyBright 2.8s ease-in-out infinite}
+@keyframes emptyBright{0%,100%{opacity:.28;filter:brightness(.9)}50%{opacity:.55;filter:brightness(1.35)}}
+.back{background:none;border:none;color:#c8c8d0;font-size:14px;font-weight:500;display:flex;align-items:center;gap:6px;margin-bottom:16px;cursor:pointer;transition:color .2s,transform .2s}
+.back:active{transform:translateX(-3px);color:#f4f4f5}
+.back svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;transition:transform .2s}
+.back:active svg{transform:translateX(-2px)}
+h1{font-size:22px;font-weight:800;margin-bottom:4px}
+.sub{font-size:14px;color:#c8c8d0;margin-bottom:20px;line-height:1.45}
+.admin-badge{font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;background:rgba(245,197,66,.18);color:#f5c542;text-transform:uppercase;letter-spacing:.04em;border:1px solid rgba(245,197,66,.3)}
+.support-badge{font-size:9px;font-weight:800;padding:2px 6px;border-radius:4px;background:rgba(96,165,250,.15);color:#60a5fa;text-transform:uppercase}
+.msg.admin-msg .msg-bubble{border-color:rgba(245,197,66,.4)!important;background:rgba(245,197,66,.1)!important;box-shadow:0 0 14px rgba(245,197,66,.12)}
+.msg.admin-msg .msg-name{color:#f5c542}
+.admin-prefix{color:#f5c542;font-weight:800;margin-right:3px}
+.admin-only{display:none!important}body.is-admin .admin-only{display:flex!important}body.is-admin button.pkg.admin-only{display:flex!important}
+.tabs{display:flex;gap:8px;overflow-x:auto;margin-bottom:16px;-webkit-overflow-scrolling:touch}
+.tabs button{background:#15151c;border:1px solid rgba(255,255,255,.08);color:#a1a1aa;font-size:13px;font-weight:700;padding:9px 15px;border-radius:10px;white-space:nowrap;cursor:pointer;transition:color .2s,border-color .2s,transform .2s,background .2s}
+.tabs button:active{transform:scale(.94)}
+.tabs button.active{color:#f5c542;border-color:rgba(245,197,66,.3);background:rgba(245,197,66,.08)}
+.panel{display:none}.panel.active{display:block;animation:fadeSlide .3s ease}
+.msg{display:flex;margin-bottom:10px;animation:fadeSlide .25s ease}.msg.me{justify-content:flex-end}
+.msg-bubble{background:#111116;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:10px 14px;max-width:80%;transition:transform .2s}
+.msg.me .msg-bubble{background:rgba(245,197,66,.1);border-color:rgba(245,197,66,.2)}
+.msg-name{font-size:11px;color:#d4d4d8;margin-bottom:2px;display:flex;align-items:center;gap:6px}
+.stat{background:#111116;border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;text-align:center;transition:transform .25s}
+.stat:active{transform:scale(.96)}
+.stat-n{font-size:20px;font-weight:800;transition:transform .3s}.stat-l{font-size:11px;color:#c8c8d0;margin-top:2px}
+.stat-n.pop{animation:numPop .45s cubic-bezier(.34,1.56,.64,1)}
+@keyframes numPop{0%{transform:scale(1)}40%{transform:scale(1.25);color:#f5c542}100%{transform:scale(1)}}
+.gold{color:#f5c542}.flex-between{display:flex;justify-content:space-between;align-items:center}
+.muted{color:#c8c8d0;font-size:13px}.mb4{margin-bottom:4px}.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb16{margin-bottom:16px}.mt4{margin-top:4px}
+.fw7{font-weight:700}.fs13{font-size:13px}.fs14{font-size:14px}.fs11{font-size:11px}
+.i{stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Bonus rows — осветление */
+.bonus-row{display:flex;align-items:center;gap:12px;padding:14px;background:#15151c;border:1px solid rgba(255,255,255,.06);border-radius:16px;margin-bottom:10px;transition:transform .2s,opacity .3s,border-color .25s,filter .25s,box-shadow .25s}
+.bonus-row:active{transform:scale(.98);filter:brightness(1.12);border-color:rgba(255,255,255,.12);box-shadow:0 0 16px rgba(245,197,66,.08)}
+.bonus-row.done{opacity:.55}
+.bonus-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:filter .3s,box-shadow .3s}
+.bonus-row:active .bonus-icon{filter:brightness(1.4)}
+.bonus-icon svg{width:22px;height:22px}
+.bonus-row:nth-child(odd) .bonus-icon{animation:iconBright 2.5s ease-in-out infinite}
+.bonus-row:nth-child(even) .bonus-icon{animation:iconBright 2.5s ease-in-out .3s infinite}
+
+.ref-code{font-family:ui-monospace,monospace;font-size:18px;font-weight:800;letter-spacing:.12em;color:#f5c542;background:#15151c;border:1px dashed rgba(245,197,66,.35);border-radius:12px;padding:14px;text-align:center;margin:12px 0;transition:border-color .25s,box-shadow .25s}
+.ref-code:active{border-color:rgba(245,197,66,.6);box-shadow:0 0 16px rgba(245,197,66,.15)}
+.progress-bar{height:6px;background:#15151c;border-radius:999px;overflow:hidden;margin-top:8px}
+.progress-fill{height:100%;background:linear-gradient(90deg,#f5c542,#e09810);border-radius:999px;transition:width .6s cubic-bezier(.22,1,.36,1);position:relative}
+.progress-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);animation:barShine 2s ease-in-out infinite}
+@keyframes barShine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+
+/* Stagger list items */
+.anim-item{animation:fadeSlide .4s ease both}
+.anim-item:nth-child(1){animation-delay:.02s}
+.anim-item:nth-child(2){animation-delay:.06s}
+.anim-item:nth-child(3){animation-delay:.1s}
+.anim-item:nth-child(4){animation-delay:.14s}
+.anim-item:nth-child(5){animation-delay:.18s}
+.anim-item:nth-child(6){animation-delay:.22s}
+.anim-item:nth-child(n+7){animation-delay:.26s}
+
+/* Balance pop */
+#balBig.pop,#bal.pop,#tix.pop{animation:numPop .5s cubic-bezier(.34,1.56,.64,1)}
+
+/* Admin login modal */
+.modal-backdrop{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.72);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:20px}
+.modal-backdrop.show{display:flex;animation:fadeSlide .25s ease}
+.modal-box{background:#121218;border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:22px 20px;width:100%;max-width:340px;box-shadow:0 20px 50px rgba(0,0,0,.55)}
+.modal-box h2{font-size:18px;font-weight:800;margin-bottom:6px;color:#fafafa}
+.modal-box .modal-sub{font-size:13px;color:#d4d4d8;margin-bottom:16px;line-height:1.45}
+.modal-box input{margin-bottom:10px}
+.modal-actions{display:flex;gap:10px;margin-top:6px}
+.modal-actions .btn,.modal-actions .btn-out{flex:1;padding:12px}
+
+/* Premium package cards */
+.pkg{background:#121218;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:16px 16px;margin-bottom:12px;width:100%;cursor:pointer;text-align:left;transition:transform .22s,border-color .25s,box-shadow .25s,background .25s;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.pkg:active{transform:scale(.985);border-color:rgba(245,197,66,.35);box-shadow:0 0 24px rgba(245,197,66,.12);background:#16161e}
+.pkg-left{display:flex;align-items:center;gap:14px;min-width:0}
+.pkg-icon{width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pkg-title{font-size:15px;font-weight:700;color:#fafafa;line-height:1.25}
+.pkg-desc{font-size:12px;color:#a1a1aa;margin-top:3px}
+.pkg-price{font-size:16px;font-weight:800;color:#f5c542;white-space:nowrap}
+.pkg-badge{position:absolute;top:10px;right:10px;font-size:10px;font-weight:800;background:linear-gradient(135deg,#f5c542,#e09810);color:#0a0a0a;padding:3px 9px;border-radius:7px;letter-spacing:.02em;box-shadow:0 2px 8px rgba(245,197,66,.35)}
+.pkg-rec{border-color:rgba(245,197,66,.28);background:linear-gradient(135deg,rgba(245,197,66,.06),#121218 60%)}
+.trust-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}
+.trust-chip{display:inline-flex;align-items:center;gap:6px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.18);border-radius:999px;padding:6px 11px;font-size:11px;font-weight:600;color:#6ee7b7}
+.trust-chip svg{width:12px;height:12px;stroke:#34d399}
+.section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#a1a1aa;margin-bottom:10px;margin-top:4px}
+
+</style>
+</head>
+<body>
+<div id="toast" class="toast"></div>
+<div id="adminModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+  <div class="modal-box">
+    <h2 id="adminModalTitle">Вход в админ-панель</h2>
+    <p class="modal-sub">Введите логин и пароль главного администратора</p>
+    <label for="admLoginIn">Логин</label>
+    <input id="admLoginIn" type="text" autocomplete="username" placeholder="Логин" maxlength="32">
+    <label for="admPassIn">Пароль</label>
+    <input id="admPassIn" type="password" autocomplete="current-password" placeholder="Пароль" maxlength="64" onkeydown="if(event.key==='Enter')submitAdminLogin()">
+    <div class="modal-actions">
+      <button type="button" class="btn-out" onclick="closeAdminModal()">Отмена</button>
+      <button type="button" class="btn" onclick="submitAdminLogin()">Войти</button>
+    </div>
+  </div>
+</div>
+<header class="header">
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="logo" id="logoBtn" title="Star of Olimp" role="button" aria-label="Логотип"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+    <div><div style="font-size:15px;font-weight:800;color:#fafafa">Star of Olimp</div><div style="font-size:11px;color:#d4d4d8">Задания · Бонусы · Рефералы</div></div>
+  </div>
+  <div style="display:flex;gap:8px">
+    <div class="chip"><svg class="i" viewBox="0 0 24 24" style="color:#f5c542"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><span id="bal">0</span></div>
+    <div class="chip"><svg class="i" viewBox="0 0 24 24" style="color:#a78bfa"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg><span id="tix">0</span></div>
+  </div>
+</header>
+<main class="main">
+
+<section id="home" class="screen active">
+  <div class="card-bal">
+    <div class="fs11 muted mb8" style="text-transform:uppercase;letter-spacing:.05em">Баланс</div>
+    <div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:16px">
+      <span id="balBig" style="font-size:36px;font-weight:800;color:#fafafa">0</span>
+      <svg class="i" viewBox="0 0 24 24" style="width:24px;height:24px;color:#f5c542;margin-bottom:6px"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    </div>
+    <div class="row"><button class="btn" onclick="show('topup')">Пополнить</button><button class="btn-out" onclick="show('withdraw')">Вывести</button></div>
+  </div>
+  <div class="grid4">
+    <button class="qa" onclick="show('shop')"><div class="qa-icon" style="background:rgba(167,139,250,.12)"><svg class="i" viewBox="0 0 24 24" style="color:#a78bfa"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>Магазин</button>
+    <button class="qa" onclick="show('bonuses')"><div class="qa-icon" style="background:rgba(52,211,153,.12)"><svg class="i" viewBox="0 0 24 24" style="color:#34d399"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg></div>Бонусы</button>
+    <button class="qa" onclick="show('contests')"><div class="qa-icon" style="background:rgba(250,204,21,.12)"><svg class="i" viewBox="0 0 24 24" style="color:#facc15"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></div>Конкурсы</button>
+    <button class="qa" onclick="show('referral')"><div class="qa-icon" style="background:rgba(96,165,250,.12)"><svg class="i" viewBox="0 0 24 24" style="color:#60a5fa"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>Рефералы</button>
+  </div>
+  <div class="flex-between mb12"><div style="font-size:15px;font-weight:700">Лента заданий</div><button class="btn btn-sm" onclick="show('create')"><svg class="i" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M5 12h14"/><path d="M12 5v14"/></svg> Создать</button></div>
+  <div id="feed"></div>
+  <div id="feedEmpty" class="empty" style="display:none"><svg viewBox="0 0 24 24"><path d="M8 6h13"/><path d="M8 12h13"/><path d="M8 18h13"/><path d="M3 6h.01"/><path d="M3 12h.01"/><path d="M3 18h.01"/></svg><div class="fs14 fw7" style="color:#e4e4e7">Пока нет заданий</div></div>
+</section>
+
+<!-- BONUSES -->
+<section id="bonuses" class="screen">
+  <button class="back" onclick="show('home')"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Назад</button>
+  <h1>Бонусы</h1>
+  <p class="sub">Выполняй задания и получай награды</p>
+
+  <div class="hint-box" id="dailyHint">
+    <b style="color:#f5c542">Чтобы забрать ежедневный бонус</b> выполни все задания: подписка на канал, поделиться и выложить сторис с каналом. После этого каждый день — <b>случайные билеты (1–5)</b>.
+  </div>
+
+  <div class="card" id="reqCard" style="margin-bottom:14px">
+    <div class="fw7 fs14 mb8">Обязательные задания</div>
+    <ul class="req-list">
+      <li id="reqChannel"><span class="req-check no" id="chkChannel">✓</span><span>Подписаться на канал t.me/olimps_stars</span></li>
+      <li id="reqShare"><span class="req-check no" id="chkShare">✓</span><span>Поделиться каналом / приложением</span></li>
+      <li id="reqStory"><span class="req-check no" id="chkStory">✓</span><span>Выложить сторис с каналом @olimps_stars</span></li>
+    </ul>
+  </div>
+
+  <div class="bonus-row" id="bDaily">
+    <div class="bonus-icon" style="background:rgba(245,197,66,.12)"><svg class="i" viewBox="0 0 24 24" style="color:#f5c542"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+    <div style="flex:1">
+      <div class="fw7 fs14">Ежедневный бонус</div>
+      <div class="fs11 muted" id="dailyDesc">Случайные билеты 1–5 · каждый день</div>
+    </div>
+    <button class="btn btn-sm" id="btnDaily" onclick="claimDaily()">Забрать</button>
+  </div>
+
+  <div class="bonus-row" id="bChannel">
+    <div class="bonus-icon" style="background:rgba(96,165,250,.12)"><svg class="i" viewBox="0 0 24 24" style="color:#60a5fa"><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9 22 2z"/></svg></div>
+    <div style="flex:1">
+      <div class="fw7 fs14">Подписка на канал</div>
+      <div class="fs11 muted">+25 ★ · t.me/olimps_stars</div>
+    </div>
+    <button class="btn btn-sm" id="btnChannel" onclick="claimChannel()">Подписаться</button>
+  </div>
+
+  <div class="bonus-row" id="bShare">
+    <div class="bonus-icon" style="background:rgba(167,139,250,.12)"><svg class="i" viewBox="0 0 24 24" style="color:#a78bfa"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg></div>
+    <div style="flex:1">
+      <div class="fw7 fs14">Поделиться каналом</div>
+      <div class="fs13 muted">+10 ★ · один раз</div>
+    </div>
+    <button class="btn btn-sm" id="btnShare" onclick="claimShare()">Поделиться</button>
+  </div>
+
+  <div class="bonus-row" id="bStory">
+    <div class="bonus-icon" style="background:rgba(251,146,60,.12)"><svg class="i" viewBox="0 0 24 24" style="color:#fb923c"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></svg></div>
+    <div style="flex:1">
+      <div class="fw7 fs14">Сторис с каналом</div>
+      <div class="fs13 muted">+20 ★ · выложить в историю канал</div>
+    </div>
+    <button class="btn btn-sm" id="btnStory" onclick="claimStory()">Выложить</button>
+  </div>
+
+  <div class="card" style="margin-top:8px">
+    <div class="fw7 fs14 mb8">Серия дней</div>
+    <div class="flex-between"><span class="fs13 muted">Текущая серия</span><span class="gold fw7" id="streakN">0</span></div>
+    <div class="progress-bar"><div class="progress-fill" id="streakBar" style="width:0%"></div></div>
+    <div class="fs11 muted mt4">7 дней подряд → бонус +3 билета + 50 ★</div>
+  </div>
+
+  <div class="card" style="margin-top:12px">
+    <div class="fw7 fs14 mb8">Промокод</div>
+    <p class="fs11 muted mb12" style="line-height:1.45">Введи промокод от администрации и получи награду. Каждый код можно активировать один раз.</p>
+    <div class="row" style="gap:8px">
+      <input id="promoInput" placeholder="ПРОМОКОД" maxlength="24" style="flex:1;text-transform:uppercase;letter-spacing:.06em;font-weight:700">
+      <button class="btn btn-sm" style="padding:12px 16px;white-space:nowrap" onclick="redeemPromo()">Активировать</button>
+    </div>
+  </div>
+</section>
+
+<!-- REFERRAL -->
+<section id="referral" class="screen">
+  <button class="back" onclick="show('home')"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Назад</button>
+  <h1>Рефералы</h1>
+  <p class="sub">Приглашай друзей — получай звёзды</p>
+
+  <div class="card">
+    <div class="fs11 muted mb8" style="text-transform:uppercase;letter-spacing:.04em">Твой код</div>
+    <div class="ref-code" id="refCode">------</div>
+    <div class="row">
+      <button class="btn" style="flex:1" onclick="copyRef()">Копировать</button>
+      <button class="btn-out" style="flex:1" onclick="shareRef()">Поделиться</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="fw7 fs14 mb8">Условия</div>
+    <div class="fs13 muted" style="line-height:1.6">
+      · Друг вводит твой код → ты <b class="gold">+30 ★</b><br>
+      · Друг получает <b class="gold">+20 ★</b> при входе<br>
+      · За каждые 5 рефералов → <b class="gold">+50 ★</b> бонус
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="flex-between mb8">
+      <div class="fw7 fs14">Приглашено</div>
+      <div class="gold fw7" id="refCount">0</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="refBar" style="width:0%"></div></div>
+    <div class="fs11 muted mt4">До бонуса за 5: <span id="refLeft">5</span></div>
+  </div>
+
+  <div class="card">
+    <div class="fw7 fs14 mb12">Ввести код друга</div>
+    <input id="refInput" placeholder="Код реферала" maxlength="8" style="text-transform:uppercase">
+    <button class="btn" style="width:100%" onclick="useRefCode()">Активировать</button>
+  </div>
+</section>
+
+<section id="create" class="screen">
+  <button class="back" onclick="show('home')"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Назад</button>
+  <h1>Новое задание</h1><p class="sub">Списываются звёзды</p>
+  <label>Что нужно сделать</label><input id="cTitle" placeholder="Подписаться на канал...">
+  <label>Ссылка на канал / ресурс</label><input id="cLink" type="url" placeholder="https://t.me/your_channel">
+  <label>Подробности</label><textarea id="cDesc" rows="3" placeholder="Условия выполнения..."></textarea>
+  <div class="row mb12"><div><label>Награда</label><input id="cReward" type="number" min="1" value="10"></div><div><label>Выполнений</label><input id="cSlots" type="number" min="1" value="5"></div></div>
+  <div class="card flex-between mb16"><div class="fs14 fw7">К списанию</div><div class="gold" style="font-size:22px;font-weight:800" id="cTotal">50</div></div>
+  <button class="btn" style="width:100%;padding:14px" onclick="createTask()">Опубликовать</button>
+</section>
+
+<section id="shop" class="screen">
+  <button class="back" onclick="show('home')"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Назад</button>
+  <h1>Магазин билетов</h1>
+  <p class="sub">Билеты нужны для участия в конкурсах и аукционах. Оплата — только официальными Telegram Stars.</p>
+
+  <div class="card flex-between mb16" style="background:linear-gradient(135deg,#15151c,#1a1525);border-color:rgba(167,139,250,.18)">
+    <div>
+      <div class="fs11 muted mb8" style="text-transform:uppercase;letter-spacing:.05em">Твои билеты</div>
+      <div style="font-size:32px;font-weight:800;color:#fafafa" id="shopTix">0</div>
+    </div>
+    <div style="width:52px;height:52px;border-radius:16px;background:rgba(167,139,250,.15);display:flex;align-items:center;justify-content:center">
+      <svg class="i" viewBox="0 0 24 24" style="width:26px;height:26px;color:#a78bfa"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>
+    </div>
+  </div>
+
+  <div class="trust-row">
+    <div class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg> Официальные Stars</div>
+    <div class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Мгновенно</div>
+  </div>
+
+  <div class="section-label">Пакеты билетов</div>
+
+  <button class="pkg" onclick="payWithStars(10,0,'tickets',1)">
+    <div class="pkg-left">
+      <div class="pkg-icon" style="background:rgba(167,139,250,.14)">
+        <svg class="i" viewBox="0 0 24 24" style="width:22px;height:22px;color:#a78bfa"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>
+      </div>
+      <div>
+        <div class="pkg-title">1 билет</div>
+        <div class="pkg-desc">Для одного конкурса</div>
+      </div>
+    </div>
+    <div class="pkg-price">10 ★</div>
+  </button>
+
+  <button class="pkg pkg-rec" onclick="payWithStars(40,0,'tickets',5)">
+    <div class="pkg-badge">−20%</div>
+    <div class="pkg-left">
+      <div class="pkg-icon" style="background:rgba(167,139,250,.18)">
+        <svg class="i" viewBox="0 0 24 24" style="width:22px;height:22px;color:#a78bfa"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M13 5v2"/><path d="M13 17v2"/><path d="M13 11v2"/></svg>
+      </div>
+      <div>
+        <div class="pkg-title">5 билетов</div>
+        <div class="pkg-desc">Выгодный пакет · 8 ★/шт</div>
+      </div>
+    </div>
+    <div class="pkg-price">40 ★</div>
+  </button>
+
+  <button class="pkg" onclick="payWithStars(140,0,'tickets',20)">
+    <div class="pkg-badge" style="background:linear-gradient(135deg,#34d399,#10b981)">−30%</div>
+    <div class="pkg-left">
+      <div class="pkg-icon" style="background:rgba(52,211,153,.12)">
+        <svg class="i" viewBox="0 0 24 24" style="width:22px;height:22px;color:#34d399"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.29 7 12 12 20.71 7"/><line x1="12" x2="12" y1="22" y2="12"/></svg>
+      </div>
+      <div>
+        <div class="pkg-title">20 билетов</div>
+        <div class="pkg-desc">Максимальная выгода · 7 ★/шт</div>
+      </div>
+    </div>
+    <div class="pkg-price">140 ★</div>
+  </button>
+
+  <div class="hint-box" style="margin-top:8px">После оплаты билеты появляются в профиле сразу. Используй их в разделе «Конкурсы».</div>
+</section>
+
+<section id="topup" class="screen">
+  <button class="back" onclick="show('home')"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Назад</button>
+  <h1>Пополнить баланс</h1>
+  <p class="sub">Оплата настоящими Telegram Stars. Средства зачисляются на внутренний баланс мгновенно после успешной оплаты.</p>
+
+  <div class="trust-row">
+    <div class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg> Через Telegram</div>
+    <div class="trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg> Мгновенно</div>
+  </div>
+
+  <div class="section-label">Выберите сумму</div>
+
+  <button class="pkg" onclick="payWithStars(50,0,'topup')">
+    <div class="pkg-left">
+      <div class="pkg-icon" style="background:rgba(245,197,66,.12)">
+        <svg class="i" viewBox="0 0 24 24" style="width:22px;height:22px;color:#f5c542"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <div>
+        <div class="pkg-title">50 ★</div>
+        <div class="pkg-desc">Базовый пакет</div>
+      </div>
+    </div>
+    <div class="pkg-price">50 ★</div>
+  </button>
+
+  <button class="pkg pkg-rec" onclick="payWithStars(150,15,'topup')">
+    <div class="pkg-badge">+15 бонус</div>
+    <div class="pkg-left">
+      <div class="pkg-icon" style="background:rgba(245,197,66,.16)">
+        <svg class="i" viewBox="0 0 24 24" style="width:22px;height:22px;color:#f5c542"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <div>
+        <div class="pkg-title">150 ★</div>
+        <div class="pkg-desc">Итого на баланс: 165 ★</div>
+      </div>
+    </div>
+    <div class="pkg-price">150 ★</div>
+  </button>
+
+  <button class="pkg" onclick="payWithStars(500,60,'topup')">
+    <div class="pkg-badge" style="background:linear-gradient(135deg,#34d399,#10b981)">+60 бонус</div>
+    <div class="pkg-left">
+      <div class="pkg-icon" style="background:rgba(52,211,153,.12)">
+        <svg class="i" viewBox="0 0 24 24" style="width:22px;height:22px;color:#34d399"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <div>
+        <div class="pkg-title">500 ★</div>
+        <div class="pkg-desc">Итого на баланс: 560 ★</div>
+      </div>
+    </div>
+    <div class="pkg-price">500 ★</div>
+  </button>
+
+  <div class="hint-box mb12">Оплата проходит через официальный платёжный интерфейс Telegram Stars. Баланс обновляется автоматически.</div>
+  <p class="muted fs13" style="text-align:center;line-height:1.5;color:#a1a1aa!important">Или напишите боту <b style="color:#f5c542">@</b><b style="color:#f5c542" id="botNameTopup">olimps_stars_bot</b> команду /topup</p>
+</section>
+
+<section id="withdraw" class="screen">
+  <button class="back" onclick="show('home')"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Назад</button>
+  <h1>Вывод средств</h1>
+  <p class="sub">Минимум 50 ★. Заявка обрабатывается администрацией. Вывод и пополнение также доступны через Telegram-бот.</p>
+  <div class="card mb16"><div class="fs13 muted mb8">Доступно к выводу</div><div style="font-size:28px;font-weight:800;color:#fafafa" id="wdAvail">0</div></div>
+  <label>Сумма (★)</label>
+  <input id="wdAmount" type="number" min="50" placeholder="Минимум 50">
+  <label>Реквизиты / @username для перевода</label>
+  <input id="wdDetails" placeholder="@username или кошелёк">
+  <button class="btn" style="width:100%;padding:14px;margin-bottom:12px" onclick="doWithdraw()">Отправить заявку</button>
+  <button class="btn-out" style="width:100%;padding:14px" onclick="openBotWithdraw()">Написать боту @<span id="botNameWithdraw">olimps_stars_bot</span></button>
+  <p class="muted fs13 mt4" style="text-align:center;line-height:1.5">Быстрый способ — напишите боту команду /withdraw</p>
+</section>
+
+<section id="contests" class="screen">
+  <div class="flex-between mb16"><h1 style="margin:0">Конкурсы</h1><button class="btn-out btn-sm admin-only" onclick="show('admin')">+ Создать</button></div>
+  <div id="contestList"></div>
+  <div id="contestEmpty" class="empty" style="display:none"><svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg><div class="fs14" style="color:#a1a1aa">Конкурсов пока нет</div></div>
+</section>
+
+<section id="auctions" class="screen">
+  <button class="back" onclick="show('home')"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Назад</button>
+  <h1>Аукционы</h1>
+  <div id="auctionList"></div>
+  <div id="auctionEmpty" class="empty" style="display:none"><div class="fs14" style="color:#a1a1aa">Аукционов пока нет</div></div>
+</section>
+
+<section id="wins" class="screen">
+  <button class="back" onclick="show('home')"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Назад</button>
+  <h1>История побед</h1>
+  <div id="winsList"></div>
+  <div id="winsEmpty" class="empty" style="display:none"><div class="fs14" style="color:#a1a1aa">Побед пока нет</div></div>
+</section>
+
+<section id="chat" class="screen">
+  <h1>Чат</h1>
+  <div id="chatBox" style="max-height:48vh;overflow-y:auto;margin-bottom:12px"></div>
+  <div style="display:flex;gap:8px">
+    <input id="chatIn" placeholder="Сообщение..." style="margin:0;flex:1" onkeydown="if(event.key==='Enter')sendMsg()">
+    <button class="btn" style="width:48px;height:48px;padding:0;border-radius:14px" onclick="sendMsg()"><svg class="i" viewBox="0 0 24 24" style="width:20px;height:20px"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg></button>
+  </div>
+</section>
+
+<section id="profile" class="screen">
+  <div style="text-align:center;margin-bottom:24px">
+    <div id="pAvatar" class="avatar-lg" style="margin:0 auto 14px">
+      <span style="font-size:28px;font-weight:800;color:#0a0a0a">★</span>
+    </div>
+    <div style="font-size:20px;font-weight:800;color:#fafafa;letter-spacing:-.02em" id="pName">—</div>
+    <div class="fs13" style="color:#60a5fa;font-weight:700;margin-top:5px;letter-spacing:.02em" id="pUsername"></div>
+    <div class="fs12" style="color:#a1a1aa;margin-top:6px;font-weight:500" id="pId">—</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;margin-top:14px;background:#15151c;border:1px solid rgba(255,255,255,.1);padding:7px 14px;border-radius:999px;font-size:12px;color:#e4e4e7;font-weight:600">
+      <svg class="i" viewBox="0 0 24 24" style="width:12px;height:12px;color:#f5c542"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg>
+      <span id="pRole">Пользователь</span>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px">
+    <div class="stat">
+      <div class="stat-n" style="color:#fafafa" id="sC">0</div>
+      <div class="stat-l">Создал</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n" style="color:#fafafa" id="sD">0</div>
+      <div class="stat-l">Выполнил</div>
+    </div>
+    <div class="stat">
+      <div class="stat-n" style="color:#fafafa" id="sT">0</div>
+      <div class="stat-l">Билетов</div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-bottom:8px">Быстрые действия</div>
+
+  <button class="pkg" style="margin-bottom:10px" onclick="show('referral')">
+    <div class="pkg-left">
+      <div class="pkg-icon" style="background:rgba(96,165,250,.12)">
+        <svg class="i" viewBox="0 0 24 24" style="width:20px;height:20px;color:#60a5fa"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <div>
+        <div class="pkg-title">Рефералы</div>
+        <div class="pkg-desc">Код, ссылка и бонусы</div>
+      </div>
+    </div>
+    <svg class="i" viewBox="0 0 24 24" style="width:18px;height:18px;color:#71717a;flex-shrink:0"><path d="m9 18 6-6-6-6"/></svg>
+  </button>
+
+  <button class="pkg" style="margin-bottom:10px" onclick="show('bonuses')">
+    <div class="pkg-left">
+      <div class="pkg-icon" style="background:rgba(52,211,153,.12)">
+        <svg class="i" viewBox="0 0 24 24" style="width:20px;height:20px;color:#34d399"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      </div>
+      <div>
+        <div class="pkg-title">Бонусы и задания</div>
+        <div class="pkg-desc">Ежедневные награды</div>
+      </div>
+    </div>
+    <svg class="i" viewBox="0 0 24 24" style="width:18px;height:18px;color:#71717a;flex-shrink:0"><path d="m9 18 6-6-6-6"/></svg>
+  </button>
+
+  <button class="pkg admin-only" style="margin-bottom:10px" onclick="show('admin')">
+    <div class="pkg-left">
+      <div class="pkg-icon" style="background:rgba(245,197,66,.12)">
+        <svg class="i" viewBox="0 0 24 24" style="width:20px;height:20px;color:#f5c542"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+      </div>
+      <div>
+        <div class="pkg-title">Админ-панель</div>
+        <div class="pkg-desc">Управление приложением</div>
+      </div>
+    </div>
+    <svg class="i" viewBox="0 0 24 24" style="width:18px;height:18px;color:#71717a;flex-shrink:0"><path d="m9 18 6-6-6-6"/></svg>
+  </button>
+
+  <!-- Вход в админку скрыт: 5 быстрых нажатий по логотипу в шапке -->
+  <button id="loginBtn" class="card" style="display:none!important" onclick="loginAdmin()"></button>
+</section>
+
+<section id="admin" class="screen">
+  <button class="back" onclick="show('profile')"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg> Назад</button>
+  <h1>Админ</h1>
+  <div class="tabs">
+    <button class="atab active" data-t="users">Люди</button>
+    <button class="atab" data-t="admins">Админы</button>
+    <button class="atab" data-t="promo">Промо</button>
+    <button class="atab" data-t="contest">Конкурс</button>
+    <button class="atab" data-t="auction">Аукцион</button>
+    <button class="atab" data-t="support">Поддержка</button>
+    <button class="atab" data-t="wd">Выводы</button>
+  </div>
+  <div id="ap-users" class="panel active"><div id="userList"></div></div>
+  <div id="ap-admins" class="panel">
+    <div class="card" style="margin-bottom:14px">
+      <div class="fw7 fs14 mb12">Назначить админа</div>
+      <input id="adUserId" placeholder="ID пользователя" style="margin-bottom:8px">
+      <input id="adLogin" placeholder="Логин для входа" style="margin-bottom:8px">
+      <input id="adPass" type="password" placeholder="Пароль для меню" style="margin-bottom:8px">
+      <div class="fs11 muted mb12" style="line-height:1.4">Админ сможет входить в меню (5 тапов по логотипу) по своему логину и паролю.</div>
+      <button class="btn" style="width:100%;padding:14px" onclick="addAdminCred()">Назначить</button>
+    </div>
+    <div class="fw7 fs14 mb8">Список админов</div>
+    <div id="adminCredList"></div>
+    <div id="adminCredEmpty" class="empty" style="display:none"><div class="fs13">Пока только главный админ</div></div>
+  </div>
+  <div id="ap-promo" class="panel">
+    <div class="card" style="margin-bottom:14px">
+      <div class="fw7 fs14 mb12">Создать промокод</div>
+      <input id="prCode" placeholder="Код (например OLIMP50)" maxlength="24" style="text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:8px">
+      <div class="row" style="gap:8px;margin-bottom:8px">
+        <div style="flex:1">
+          <div class="fs11 muted mb4">Звёзды ★</div>
+          <input id="prStars" type="number" min="0" value="50" placeholder="0">
+        </div>
+        <div style="flex:1">
+          <div class="fs11 muted mb4">Билеты 🎟</div>
+          <input id="prTickets" type="number" min="0" value="0" placeholder="0">
+        </div>
+      </div>
+      <div class="row" style="gap:8px;margin-bottom:8px">
+        <div style="flex:1">
+          <div class="fs11 muted mb4">Лимит активаций</div>
+          <input id="prMax" type="number" min="0" value="100" placeholder="0 = ∞">
+        </div>
+        <div style="flex:1">
+          <div class="fs11 muted mb4">Заметка (необяз.)</div>
+          <input id="prNote" placeholder="Акция / блогер">
+        </div>
+      </div>
+      <div class="fs11 muted mb12" style="line-height:1.4">Лимит 0 = без ограничения. Каждый пользователь может активировать код только один раз.</div>
+      <button class="btn" style="width:100%;padding:14px" onclick="createPromo()">Создать промокод</button>
+    </div>
+    <div class="flex-between mb8">
+      <div class="fw7 fs14">Все промокоды</div>
+      <div class="fs11 muted" id="promoCount">0</div>
+    </div>
+    <div id="promoList"></div>
+    <div id="promoEmpty" class="empty" style="display:none"><div class="fs13">Промокодов пока нет</div></div>
+  </div>
+  <div id="ap-contest" class="panel">
+    <input id="ncTitle" placeholder="Название"><textarea id="ncDesc" rows="2" placeholder="Описание"></textarea>
+    <div class="row"><input id="ncPrize" type="number" value="400"><input id="ncCost" type="number" value="2" min="1"></div>
+    <button class="btn" style="width:100%;padding:14px" onclick="createContest()">Создать</button>
+  </div>
+  <div id="ap-auction" class="panel">
+    <input id="naTitle" placeholder="Название"><input id="naPrize" type="number" value="250"><input id="naMin" type="number" value="15">
+    <button class="btn" style="width:100%;padding:14px" onclick="createAuction()">Создать</button>
+  </div>
+  <div id="ap-support" class="panel">
+    <input id="supportId" placeholder="ID пользователя"><button class="btn" style="width:100%;padding:14px" onclick="setSupport()">Назначить</button>
+    <div id="supportCurrent" class="muted fs13 mt4"></div>
+  </div>
+  <div id="ap-wd" class="panel"><div id="wdList"></div><div id="wdEmpty" class="empty" style="display:none"><div class="fs13">Заявок нет</div></div></div>
+</section>
+</main>
+
+<nav class="nav">
+  <button class="active" data-s="home" onclick="show('home')"><svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Главная</span></button>
+  <button data-s="bonuses" onclick="show('bonuses')"><svg viewBox="0 0 24 24"><path d="M20 12v10H4V12"/><path d="M2 7h20v5H2z"/><path d="M12 22V7"/><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg><span>Бонусы</span></button>
+  <button data-s="chat" onclick="show('chat')"><svg viewBox="0 0 24 24"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg><span>Чат</span></button>
+  <button data-s="profile" onclick="show('profile')"><svg viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Профиль</span></button>
+</nav>
+
+<script>
+const KEY='sol_ref_v2';
+const CHANNEL_URL='https://t.me/olimps_stars';
+const CHANNEL_USERNAME='olimps_stars';
+const BOT_USERNAME='olimps_stars_bot'; // ← ЗАМЕНИТЕ на реальный username вашего бота из @BotFather
+const BOT_LINK='https://t.me/'+BOT_USERNAME;
+const STORY_MEDIA='https://i.imgur.com/8Km9tLL.png'; // ← замените на красивое изображение для сторис (лого / баннер канала)
+// Синхронизация имени бота в UI
+document.addEventListener('DOMContentLoaded',()=>{
+  const el1=document.getElementById('botNameTopup');
+  const el2=document.getElementById('botNameWithdraw');
+  if(el1)el1.textContent=BOT_USERNAME;
+  if(el2)el2.textContent=BOT_USERNAME;
+});
+function genCode(){return Math.random().toString(36).slice(2,8).toUpperCase()}
+let S={
+  user:{id:'u'+Math.random().toString(36).slice(2,9),name:'User_'+Math.floor(Math.random()*9000+1000),
+    balance:0,tickets:0,isAdmin:false,isSupport:false,banned:false,created:0,done:0,welcome:false,
+    refCode:'',refs:0,usedRef:false,dailyLast:0,streak:0,channelDone:false,shareDone:false,storyDone:false,
+    usedPromos:[],tgId:null,username:'',avatar:'',photoUrl:''},
+  tasks:[],contests:[],auctions:[],messages:[],withdraws:[],wins:[],promos:[],supportId:null,admins:[],
+  adminCreds:[],users:{}
+};
+function getTgUser(){
+  try{
+    const tg=window.Telegram&&window.Telegram.WebApp;
+    if(tg){
+      tg.ready&&tg.ready();
+      tg.expand&&tg.expand();
+      try{
+        if(tg.setHeaderColor)tg.setHeaderColor('#0a0a0c');
+        if(tg.setBackgroundColor)tg.setBackgroundColor('#0a0a0c');
+        if(tg.colorScheme!=='dark' && tg.setColorScheme)tg.setColorScheme('dark');
+        // Force dark look even if Telegram is light
+        document.documentElement.style.colorScheme='dark';
+        document.body.style.background='#0a0a0c';
+        document.body.style.color='#fafafa';
+      }catch(e){}
+    }
+    const u=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user;
+    if(u&&u.id)return u;
+  }catch(e){}
+  return null;
+}
+function syncTgProfile(){
+  const tg=getTgUser();
+  if(!tg)return false;
+  S.user.tgId=String(tg.id);
+  S.user.id='tg'+tg.id;
+  const name=[tg.first_name,tg.last_name].filter(Boolean).join(' ').trim();
+  if(name)S.user.name=name;
+  S.user.username=tg.username||S.user.username||'';
+  // photo_url доступен в WebApp, если Telegram его отдаёт
+  if(tg.photo_url){
+    S.user.photoUrl=tg.photo_url;
+    S.user.avatar=tg.photo_url;
+  }
+  return true;
+}
+function registerUser(u){
+  if(!u||!u.id)return;
+  if(!S.users||typeof S.users!=='object')S.users={};
+  S.users[u.id]={
+    id:u.id,name:u.name||'User',username:u.username||'',avatar:u.avatar||u.photoUrl||'',
+    tgId:u.tgId||null,isAdmin:!!u.isAdmin||(S.admins||[]).includes(u.id),
+    banned:!!u.banned,balance:u.balance||0,tickets:u.tickets||0
+  };
+}
+function avatarHtml(u,size){
+  const cls=size==='lg'?'avatar-lg':'avatar-sm';
+  const src=u&&(u.avatar||u.photoUrl);
+  if(src)return `<div class="${cls}"><img src="${esc(src)}" alt="" onerror="this.onerror=null;this.parentNode.innerHTML='★'"></div>`;
+  const letter=((u&&u.name)||'U').trim().charAt(0).toUpperCase()||'★';
+  if(size==='lg')return `<div class="${cls}"><span style="font-size:28px;font-weight:800;color:#0a0a0a">${esc(letter)}</span></div>`;
+  return `<div class="${cls}"><span style="font-size:13px;font-weight:800;color:#0a0a0a">${esc(letter)}</span></div>`;
+}
+function load(){
+  try{const r=localStorage.getItem(KEY);if(r)S={...S,...JSON.parse(r)}}catch(e){}
+  if(!S.user)S.user={id:'u'+Math.random().toString(36).slice(2,9),name:'User',balance:0,tickets:0,isAdmin:false,isSupport:false,banned:false,created:0,done:0,welcome:false,refCode:'',refs:0,usedRef:false,dailyLast:0,streak:0,channelDone:false,shareDone:false,storyDone:false,usedPromos:[],tgId:null,username:'',avatar:'',photoUrl:''};
+  if(!S.user.refCode)S.user.refCode=genCode();
+  if(!Array.isArray(S.promos))S.promos=[];
+  if(!Array.isArray(S.user.usedPromos))S.user.usedPromos=[];
+  if(!Array.isArray(S.admins))S.admins=[];
+  if(!Array.isArray(S.adminCreds))S.adminCreds=[];
+  if(!S.users||typeof S.users!=='object')S.users={};
+  const prevId=S.user.id;
+  const wasAdmin=!!S.user.isAdmin||(S.admins||[]).includes(prevId)||(S.adminCreds||[]).some(a=>a.userId===prevId);
+  syncTgProfile();
+  // если id сменился на tg… — переносим права админа
+  if(wasAdmin){
+    S.user.isAdmin=true;
+    if(!S.admins.includes(S.user.id))S.admins.push(S.user.id);
+    if(prevId&&prevId!==S.user.id){
+      S.admins=S.admins.filter(id=>id!==prevId);
+      if(!S.admins.includes(S.user.id))S.admins.push(S.user.id);
+      (S.adminCreds||[]).forEach(a=>{if(a.userId===prevId)a.userId=S.user.id});
+    }
+  } else if(S.admins.includes(S.user.id)||(S.adminCreds||[]).some(a=>a.userId===S.user.id)){
+    S.user.isAdmin=true;
+  }
+  if(!S.user.welcome){
+    S.user.tickets=10;S.user.balance=0;S.user.welcome=true;
+    setTimeout(()=>toast('Бонус: 10 билетов. Загляни в Бонусы и Рефералы'),500);
+  }
+  registerUser(S.user);
+  save();
+}
+function save(){localStorage.setItem(KEY,JSON.stringify(S))}
+function toast(m,ok=true){const t=document.getElementById('toast');t.textContent=m;t.style.borderColor=ok?'rgba(245,197,66,.3)':'rgba(248,113,113,.3)';t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(n=>n.classList.toggle('active',n.dataset.s===id));
+  if(id==='home')renderFeed();
+  if(id==='shop')updateUI();
+  if(id==='bonuses')renderBonuses();
+  if(id==='referral')renderReferral();
+  if(id==='contests')renderContests();
+  if(id==='auctions')renderAuctions();
+  if(id==='wins')renderWins();
+  if(id==='chat')renderChat();
+  if(id==='profile')renderProfile();
+  if(id==='admin')renderAdmin();
+  if(id==='withdraw')document.getElementById('wdAvail').textContent=S.user.balance;
+}
+function _pop(el){if(!el)return;el.classList.remove('pop');void el.offsetWidth;el.classList.add('pop')}
+function updateUI(){
+  const bal=document.getElementById('bal');
+  const balBig=document.getElementById('balBig');
+  const tix=document.getElementById('tix');
+  const shopTix=document.getElementById('shopTix');
+  const prevB=bal?+bal.textContent:null;
+  const prevT=tix?+tix.textContent:null;
+  if(bal)bal.textContent=S.user.balance;
+  if(balBig)balBig.textContent=S.user.balance;
+  if(tix)tix.textContent=S.user.tickets;
+  if(shopTix)shopTix.textContent=S.user.tickets;
+  if(prevB!==null&&prevB!==S.user.balance){_pop(bal);_pop(balBig)}
+  if(prevT!==null&&prevT!==S.user.tickets)_pop(tix);
+  document.body.classList.toggle('is-admin',S.user.isAdmin);
+}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function isUserAdmin(uid){
+  if(!uid)return false;
+  if(S.admins&&S.admins.includes(uid))return true;
+  if(S.adminCreds&&S.adminCreds.some(a=>a.userId===uid))return true;
+  if(S.user&&S.user.id===uid&&S.user.isAdmin)return true;
+  if(S.users&&S.users[uid]&&S.users[uid].isAdmin)return true;
+  return false;
+}
+function roleBadge(uid){
+  if(isUserAdmin(uid))return'<span class="admin-badge">★ Админ</span>';
+  if(S.supportId===uid||(S.user.id===uid&&S.user.isSupport))return'<span class="support-badge">Поддержка</span>';
+  return'';
+}
+
+function todayKey(){const d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()}
+
+function dailyReqsDone(){
+  const u=S.user;
+  return !!(u.channelDone && u.shareDone && u.storyDone);
+}
+
+function renderBonuses(){
+  updateUI();
+  const u=S.user;
+  const reqs=dailyReqsDone();
+  const canDaily=reqs && u.dailyLast!==todayKey();
+
+  // checklist
+  const setChk=(id,ok)=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.className='req-check '+(ok?'ok':'no');
+    el.textContent=ok?'✓':'';
+  };
+  setChk('chkChannel',!!u.channelDone);
+  setChk('chkShare',!!u.shareDone);
+  setChk('chkStory',!!u.storyDone);
+
+  const hint=document.getElementById('dailyHint');
+  if(hint){
+    if(reqs){
+      hint.innerHTML='Все задания выполнены. Каждый день можно забирать <b style="color:#f5c542">случайные билеты (1–5)</b>. Не пропускай дни — серия даёт доп. награду.';
+    }else{
+      hint.innerHTML='<b style="color:#f5c542">Чтобы забрать ежедневный бонус</b> выполни все задания ниже: подписка на канал, поделиться приложением и сторис. После этого каждый день можно получать <b>случайные билеты (1–5)</b>.';
+    }
+  }
+
+  const btn=document.getElementById('btnDaily');
+  const row=document.getElementById('bDaily');
+  if(!reqs){
+    btn.disabled=true;
+    btn.textContent='Сначала задания';
+    row.classList.remove('done');
+    row.classList.add('daily-locked');
+    document.getElementById('dailyDesc').textContent='Нужно выполнить 3 задания ниже';
+  }else if(u.dailyLast===todayKey()){
+    btn.disabled=true;
+    btn.textContent='Забрано';
+    row.classList.add('done');
+    row.classList.remove('daily-locked');
+    document.getElementById('dailyDesc').textContent='Случайные билеты 1–5 · уже получено сегодня';
+  }else{
+    btn.disabled=false;
+    btn.textContent='Забрать';
+    row.classList.remove('done');
+    row.classList.remove('daily-locked');
+    document.getElementById('dailyDesc').textContent='Случайные билеты 1–5 · каждый день';
+  }
+
+  document.getElementById('btnChannel').disabled=!!u.channelDone;
+  document.getElementById('btnChannel').textContent=u.channelDone?'Получено':'Подписаться';
+  document.getElementById('bChannel').classList.toggle('done',!!u.channelDone);
+  document.getElementById('btnShare').disabled=!!u.shareDone;
+  document.getElementById('btnShare').textContent=u.shareDone?'Получено':'Поделиться';
+  document.getElementById('bShare').classList.toggle('done',!!u.shareDone);
+  document.getElementById('btnStory').disabled=!!u.storyDone;
+  document.getElementById('btnStory').textContent=u.storyDone?'Получено':'Выложить';
+  document.getElementById('bStory').classList.toggle('done',!!u.storyDone);
+  document.getElementById('streakN').textContent=u.streak||0;
+  document.getElementById('streakBar').style.width=Math.min(100,((u.streak||0)/7)*100)+'%';
+}
+
+function claimDaily(){
+  if(!dailyReqsDone()){
+    toast('Сначала выполни все задания: подписка, поделиться и сторис',false);
+    return;
+  }
+  if(S.user.dailyLast===todayKey())return toast('Уже забрано сегодня',false);
+  const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+  const yKey=yesterday.getFullYear()+'-'+(yesterday.getMonth()+1)+'-'+yesterday.getDate();
+  if(S.user.dailyLast===yKey)S.user.streak=(S.user.streak||0)+1;
+  else S.user.streak=1;
+  S.user.dailyLast=todayKey();
+  // рандом 1–5 билетов
+  const tickets=1+Math.floor(Math.random()*5);
+  S.user.tickets=(S.user.tickets||0)+tickets;
+  let msg='+'+tickets+' 🎟 билет'+(tickets>1?'а/ов':'')+' ежедневный бонус';
+  if(S.user.streak>=7){
+    S.user.balance+=50;
+    S.user.tickets+=3;
+    S.user.streak=0;
+    msg='+'+tickets+' 🎟 + 3 🎟 и +50 ★ за серию 7 дней!';
+  }
+  save();updateUI();renderBonuses();toast(msg);
+}
+
+function claimChannel(){
+  if(S.user.channelDone)return;
+  const tg = window.Telegram && window.Telegram.WebApp;
+  // Открываем именно канал пользователя — t.me/olimps_stars
+  if(tg && tg.openTelegramLink) tg.openTelegramLink(CHANNEL_URL);
+  else window.open(CHANNEL_URL,'_blank');
+  // В продакшене обязательно проверяйте подписку через Bot API getChatMember
+  setTimeout(()=>{
+    if(S.user.channelDone)return;
+    S.user.channelDone=true;S.user.balance+=25;save();updateUI();renderBonuses();
+    toast('+25 ★ за подписку на канал @'+CHANNEL_USERNAME);
+  },1500);
+}
+
+function claimShare(){
+  if(S.user.shareDone)return;
+  const text='⭐ Star of Olimp — зарабатывай звёзды и билеты!\nКанал: t.me/'+CHANNEL_USERNAME+'\nМой реф-код: '+S.user.refCode;
+  // Делимся ссылкой на канал + бот (чтобы человек мог и подписаться, и открыть приложение)
+  const shareUrl = CHANNEL_URL;
+  const tg = window.Telegram && window.Telegram.WebApp;
+  if(tg && tg.openTelegramLink){
+    // Нативный Telegram share-диалог
+    tg.openTelegramLink('https://t.me/share/url?url='+encodeURIComponent(shareUrl)+'&text='+encodeURIComponent(text));
+  }else if(navigator.share){
+    navigator.share({title:'Star of Olimp',text,url:shareUrl}).catch(()=>{});
+  }else if(navigator.clipboard){
+    navigator.clipboard.writeText(text+'\n'+shareUrl).then(()=>toast('Ссылка скопирована'));
+  }
+  S.user.shareDone=true;S.user.balance+=10;save();updateUI();renderBonuses();
+  toast('+10 ★ за то, что поделились');
+}
+
+function claimStory(){
+  if(S.user.storyDone)return;
+  const tg = window.Telegram && window.Telegram.WebApp;
+  const storyText = '⭐ Star of Olimp — задания, бонусы и конкурсы за Telegram Stars!\nПодписывайся: t.me/'+CHANNEL_USERNAME;
+  if(tg && typeof tg.shareToStory === 'function'){
+    try{
+      tg.shareToStory(STORY_MEDIA, {
+        text: storyText,
+        widget_link: { url: CHANNEL_URL, name: 'Star of Olimp' }
+      });
+    }catch(e){
+      console.warn('shareToStory error', e);
+      if(tg.openTelegramLink) tg.openTelegramLink(CHANNEL_URL);
+    }
+  }else if(tg && tg.openTelegramLink){
+    tg.openTelegramLink(CHANNEL_URL);
+    toast('Открой сторис и отметь канал @'+CHANNEL_USERNAME);
+  }else{
+    toast('Открой Telegram и выложи сторис с каналом t.me/'+CHANNEL_USERNAME);
+  }
+  // Бонус даём после действия (в проде можно проверять через API)
+  setTimeout(()=>{
+    if(S.user.storyDone)return;
+    S.user.storyDone=true;S.user.balance+=20;save();updateUI();renderBonuses();
+    toast('+20 ★ за сторис с каналом');
+  },1800);
+}
+
+function renderReferral(){
+  updateUI();
+  document.getElementById('refCode').textContent=S.user.refCode;
+  document.getElementById('refCount').textContent=S.user.refs||0;
+  const left=5-((S.user.refs||0)%5);
+  document.getElementById('refLeft').textContent=left===5&&S.user.refs?0:left;
+  document.getElementById('refBar').style.width=(((S.user.refs||0)%5)/5*100)+'%';
+}
+
+function copyRef(){
+  const t='Код: '+S.user.refCode+' — Star of Olimp';
+  if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast('Код скопирован'));
+  else toast(S.user.refCode);
+}
+
+function shareRef(){
+  const text='Заходи в Star of Olimp! Код приглашения: '+S.user.refCode+' — получи бонус ★';
+  if(navigator.share)navigator.share({title:'Star of Olimp',text}).catch(()=>{});
+  else if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>toast('Текст скопирован'));
+  else toast(S.user.refCode);
+}
+
+function useRefCode(){
+  if(S.user.usedRef)return toast('Код уже использован',false);
+  const code=(document.getElementById('refInput').value||'').trim().toUpperCase();
+  if(!code||code.length<4)return toast('Введи код',false);
+  if(code===S.user.refCode)return toast('Нельзя свой код',false);
+  // симуляция: принимаем любой код ≠ своему
+  S.user.usedRef=true;
+  S.user.balance+=20;
+  // в реальном API бонус ушёл бы владельцу кода (+30)
+  // здесь для демо просто начисляем себе
+  save();updateUI();renderReferral();
+  toast('+20 ★ за реферальный код');
+  document.getElementById('refInput').value='';
+}
+
+// симуляция «кто-то ввёл мой код» — кнопка в профиле не нужна, для теста:
+function simRefIn(){
+  S.user.refs=(S.user.refs||0)+1;
+  S.user.balance+=30;
+  if(S.user.refs%5===0){S.user.balance+=50;toast('+30 ★ и +50 ★ за 5 рефералов!')}
+  else toast('+30 ★ новый реферал');
+  save();updateUI();renderReferral();
+}
+
+function renderFeed(){updateUI();const list=[...S.tasks].sort((a,b)=>b.ts-a.ts);const box=document.getElementById('feed');const empty=document.getElementById('feedEmpty');if(!list.length){box.innerHTML='';empty.style.display='block'}else{empty.style.display='none';box.innerHTML=list.map(t=>{const left=t.slots-t.taken;const mine=t.authorId===S.user.id;const hasLink=t.link&&t.link.trim();return`<div class="card anim-item"><div class="flex-between mb8"><div class="fw7 fs14">${esc(t.title)}</div><span class="badge">${t.reward} ★</span></div><div class="muted fs13 mb8">${esc(t.desc)}</div>${hasLink?`<div class="fs12 mb12" style="color:#60a5fa;word-break:break-all">🔗 ${esc(t.link)}</div>`:''}<div class="flex-between"><span class="fs11 muted">${esc(t.author)} · ${t.taken}/${t.slots}</span>${mine?'<span class="fs11 muted">твоё</span>':`<button class="btn btn-sm" onclick="doTask('${t.id}')" ${left<=0?'disabled':''}>Выполнить</button>`}</div></div>`}).join('')}}
+document.getElementById('cReward').oninput=document.getElementById('cSlots').oninput=()=>{document.getElementById('cTotal').textContent=(+document.getElementById('cReward').value||0)*(+document.getElementById('cSlots').value||0)};
+function createTask(){if(S.user.banned)return toast('Заблокирован',false);const title=document.getElementById('cTitle').value.trim();const link=(document.getElementById('cLink').value||'').trim();const desc=document.getElementById('cDesc').value.trim();const reward=+document.getElementById('cReward').value;const slots=+document.getElementById('cSlots').value;if(!title||!desc)return toast('Заполни поля',false);if(link&&!/^https?:\/\//i.test(link)&&!/^t\.me\//i.test(link))return toast('Ссылка должна начинаться с https:// или t.me/',false);const total=reward*slots;if(S.user.balance<total)return toast('Недостаточно звёзд. Пополни',false);S.user.balance-=total;S.user.created++;const normLink=link?(/^https?:\/\//i.test(link)?link:'https://'+link):'';S.tasks.unshift({id:'t'+Date.now(),title,desc,link:normLink,reward,slots,taken:0,author:S.user.name,authorId:S.user.id,status:'open',ts:Date.now()});save();toast('Опубликовано');document.getElementById('cTitle').value='';document.getElementById('cLink').value='';document.getElementById('cDesc').value='';show('home')}
+function doTask(id){if(S.user.banned)return toast('Заблокирован',false);const t=S.tasks.find(x=>x.id===id);if(!t||t.taken>=t.slots)return toast('Мест нет',false);if(t.authorId===S.user.id)return toast('Нельзя своё',false);if(t.link){const tg=window.Telegram&&window.Telegram.WebApp;if(tg&&tg.openTelegramLink&&/t\.me\//i.test(t.link))tg.openTelegramLink(t.link);else if(tg&&tg.openLink)tg.openLink(t.link);else window.open(t.link,'_blank')}t.taken++;S.user.balance+=t.reward;S.user.done++;if(t.taken>=t.slots)t.status='closed';if(Math.random()<.25){S.user.tickets++;toast('+'+t.reward+' ★ и +1 билет')}else toast('+'+t.reward+' ★');save();renderFeed()}
+function buy(n,price){if(S.user.balance<price)return toast('Не хватает звёзд на балансе',false);S.user.balance-=price;S.user.tickets+=n;save();updateUI();toast('+'+n+' билет(ов) с баланса')}
+function topup(a,b){S.user.balance+=a+b;save();updateUI();toast('+'+(a+b)+' ★ на баланс');show('home')}
+
+/** Оплата настоящими Telegram Stars через openInvoice (или fallback) */
+function payWithStars(starsAmount, bonus, type, ticketsCount){
+  ticketsCount = ticketsCount || 0;
+  const tg = window.Telegram && window.Telegram.WebApp;
+  const total = starsAmount + (bonus||0);
+  const title = type === 'tickets' ? (ticketsCount + ' билет(ов)') : ('Пополнение ' + starsAmount + ' ★');
+  const description = type === 'tickets'
+    ? 'Покупка билетов Star of Olimp за настоящие Telegram Stars'
+    : 'Пополнение внутреннего баланса Star of Olimp';
+
+  // Если есть Telegram WebApp — пробуем реальную оплату через invoice
+  if(tg && tg.openInvoice){
+    // В продакшене: запросить invoice_link с вашего бэкенда (createInvoiceLink с currency: "XTR")
+    // Здесь демо-режим: симуляция успешной оплаты после подтверждения
+    if(confirm('Оплатить ' + starsAmount + ' настоящих Telegram Stars?\n\n' + description + (bonus ? '\nБонус: +' + bonus + ' ★' : '') + '\n\n(В продакшене откроется официальное окно оплаты Stars)')){
+      // Симуляция успешной оплаты
+      if(type === 'tickets'){
+        S.user.tickets += ticketsCount;
+        toast('Оплачено ' + starsAmount + ' ★ · +' + ticketsCount + ' билет(ов)');
+      }else{
+        S.user.balance += total;
+        toast('Оплачено ' + starsAmount + ' ★ · +' + total + ' на баланс');
+      }
+      save();updateUI();
+      if(type !== 'tickets') show('home');
+    }
+    return;
+  }
+
+  // Fallback без Telegram
+  if(confirm('Демо-оплата ' + starsAmount + ' ★ (реальная оплата доступна только внутри Telegram)')){
+    if(type === 'tickets'){
+      S.user.tickets += ticketsCount;
+      toast('Демо: +' + ticketsCount + ' билет(ов)');
+    }else{
+      S.user.balance += total;
+      toast('Демо: +' + total + ' ★ на баланс');
+    }
+    save();updateUI();
+    if(type !== 'tickets') show('home');
+  }
+}
+
+function openBotWithdraw(){
+  const tg = window.Telegram && window.Telegram.WebApp;
+  const link = BOT_LINK + '?start=withdraw';
+  if(tg && tg.openTelegramLink) tg.openTelegramLink(link);
+  else window.open(link, '_blank');
+}
+
+function doWithdraw(){
+  const amount=+document.getElementById('wdAmount').value;
+  const details=document.getElementById('wdDetails').value.trim();
+  if(amount<50)return toast('Минимум 50 ★',false);
+  if(amount>S.user.balance)return toast('Недостаточно средств',false);
+  if(!details)return toast('Укажи реквизиты или @username',false);
+  S.user.balance-=amount;
+  S.withdraws.push({id:'w'+Date.now(),user:S.user.name,userId:S.user.id,amount,details,status:'pending',ts:Date.now()});
+  save();updateUI();
+  toast('Заявка на вывод отправлена. Ожидайте обработки.');
+  // Дополнительно можно открыть бота
+  setTimeout(()=>{ if(confirm('Открыть бота для уточнения заявки?')) openBotWithdraw(); }, 600);
+  show('home');
+}
+function renderContests(){updateUI();const list=S.contests.filter(c=>c.active);const box=document.getElementById('contestList');const empty=document.getElementById('contestEmpty');if(!list.length){box.innerHTML='';empty.style.display='block';return}empty.style.display='none';box.innerHTML=list.map(c=>`<div class="card"><div class="flex-between mb8"><div class="fw7 fs14">${esc(c.title)}</div><span class="badge">${c.prize} ★</span></div><div class="muted fs13 mb12">${esc(c.desc||'')}</div><div class="flex-between"><span class="fs11 muted">${c.parts.length} уч. · ${c.cost} 🎟</span><button class="btn btn-sm" onclick="joinContest('${c.id}')">Участвовать</button></div></div>`).join('')}
+function joinContest(id){const c=S.contests.find(x=>x.id===id);if(!c||!c.active)return;if(c.parts.includes(S.user.id))return toast('Уже участвуешь',false);if(S.user.tickets<c.cost)return toast('Нужно '+c.cost+' билет(ов)',false);S.user.tickets-=c.cost;c.parts.push(S.user.id);save();updateUI();renderContests();toast('Ты в конкурсе')}
+function createContest(){const title=document.getElementById('ncTitle').value.trim();const desc=document.getElementById('ncDesc').value.trim();const prize=+document.getElementById('ncPrize').value;const cost=+document.getElementById('ncCost').value;if(!title||prize<1||cost<1)return toast('Заполни',false);S.contests.unshift({id:'c'+Date.now(),title,desc,prize,cost,parts:[],active:true});save();toast('Создан');show('contests')}
+function renderAuctions(){const list=S.auctions.filter(a=>a.active);const box=document.getElementById('auctionList');const empty=document.getElementById('auctionEmpty');if(!list.length){box.innerHTML='';empty.style.display='block';return}empty.style.display='none';box.innerHTML=list.map(a=>`<div class="card"><div class="flex-between mb8"><div class="fw7 fs14">${esc(a.title)}</div><span class="badge">${a.prize} ★</span></div><div class="muted fs13 mb12">Ставка: <b style="color:#fff">${a.highest||a.min} ★</b></div><div style="display:flex;gap:8px"><input id="bid_${a.id}" type="number" min="${(a.highest||a.min)+1}" placeholder="Ставка" style="margin:0;flex:1;padding:10px"><button class="btn btn-sm" onclick="placeBid('${a.id}')">Ставка</button></div></div>`).join('')}
+function placeBid(id){const a=S.auctions.find(x=>x.id===id);if(!a)return;const val=+document.getElementById('bid_'+id).value;const min=(a.highest||a.min)+1;if(val<min)return toast('Минимум '+min,false);if(S.user.balance<val)return toast('Недостаточно',false);S.user.balance-=val;a.highest=val;a.highestUser=S.user.name;save();updateUI();renderAuctions();toast('Ставка принята')}
+function createAuction(){const title=document.getElementById('naTitle').value.trim();const prize=+document.getElementById('naPrize').value;const min=+document.getElementById('naMin').value;if(!title||prize<1||min<1)return toast('Заполни',false);S.auctions.unshift({id:'a'+Date.now(),title,prize,min,bids:[],highest:0,highestUser:null,active:true});save();toast('Создан');show('auctions')}
+function renderWins(){const box=document.getElementById('winsList');const empty=document.getElementById('winsEmpty');if(!S.wins.length){box.innerHTML='';empty.style.display='block';return}empty.style.display='none';box.innerHTML=S.wins.map(w=>`<div class="card flex-between"><div class="fw7 fs14">${esc(w.title)}</div><div class="gold fw7">${w.amount} ★</div></div>`).join('')}
+function renderChat(){
+  const box=document.getElementById('chatBox');
+  box.innerHTML=S.messages.map(m=>{
+    const adm=!!m.isAdmin||isUserAdmin(m.userId);
+    const badge=roleBadge(m.userId);
+    const me=m.userId===S.user.id||m.user===S.user.name;
+    const un=m.username?(' @'+esc(m.username)):'';
+    const prefix=adm?'<span class="admin-prefix">★</span> ':'';
+    const av=avatarHtml({avatar:m.avatar,photoUrl:m.avatar},'sm');
+    return `<div class="msg ${me?'me':''} ${adm?'admin-msg':''}"><div class="user-row" style="align-items:flex-end;gap:8px;${!me?'':'flex-direction:row-reverse'}">${av}<div class="msg-bubble"><div class="msg-name">${prefix}${esc(m.user)}${un} ${badge}</div><div class="fs14">${esc(m.text)}</div></div></div></div>`;
+  }).join('');
+  box.scrollTop=box.scrollHeight;
+}
+function sendMsg(){
+  const text=document.getElementById('chatIn').value.trim();
+  if(!text)return;
+  registerUser(S.user);
+  S.messages.push({
+    id:Date.now(),user:S.user.name,userId:S.user.id,
+    username:S.user.username||'',avatar:S.user.avatar||S.user.photoUrl||'',
+    isAdmin:!!S.user.isAdmin||isUserAdmin(S.user.id),
+    text,ts:Date.now()
+  });
+  document.getElementById('chatIn').value='';
+  save();renderChat();
+}
+function renderProfile(){
+  updateUI();
+  registerUser(S.user);
+  document.getElementById('pName').textContent=S.user.name||'Пользователь';
+  const un=document.getElementById('pUsername');
+  if(un){
+    if(S.user.username){
+      un.textContent='@'+S.user.username;
+      un.style.display='';
+    } else {
+      un.textContent='';
+      un.style.display='none';
+    }
+  }
+  const idEl=document.getElementById('pId');
+  if(idEl){
+    const parts=[];
+    if(S.user.tgId)parts.push('ID '+S.user.tgId);
+    parts.push(S.user.id);
+    idEl.textContent=parts.join(' · ');
+  }
+  document.getElementById('pRole').textContent=S.user.isAdmin?'Администратор':(S.user.isSupport?'Поддержка':'Пользователь');
+  document.getElementById('sC').textContent=S.user.created||0;
+  document.getElementById('sD').textContent=S.user.done||0;
+  document.getElementById('sT').textContent=S.user.tickets||0;
+  const av=document.getElementById('pAvatar');
+  if(av){
+    const src=S.user.avatar||S.user.photoUrl;
+    if(src){
+      av.innerHTML='<img src="'+esc(src)+'" alt="" onerror="this.onerror=null;this.parentNode.innerHTML=\'<span style=font-size:28px;font-weight:800;color:#0a0a0a>★</span>\'">';
+    } else {
+      const letter=(S.user.name||'U').trim().charAt(0).toUpperCase()||'★';
+      av.innerHTML='<span style="font-size:28px;font-weight:800;color:#0a0a0a">'+esc(letter)+'</span>';
+    }
+  }
+  const lb=document.getElementById('loginBtn');if(lb)lb.style.display='none';
+}
+function openAdminModal(){
+  const m=document.getElementById('adminModal');
+  if(!m)return;
+  m.classList.add('show');
+  const li=document.getElementById('admLoginIn');
+  const pi=document.getElementById('admPassIn');
+  if(li){li.value='';setTimeout(()=>li.focus(),80)}
+  if(pi)pi.value='';
+}
+function closeAdminModal(){
+  const m=document.getElementById('adminModal');
+  if(m)m.classList.remove('show');
+}
+function grantAdmin(label){
+  S.user.isAdmin=true;
+  if(!Array.isArray(S.admins))S.admins=[];
+  if(!S.admins.includes(S.user.id))S.admins.push(S.user.id);
+  registerUser(S.user);
+  save();
+  document.body.classList.add('is-admin');
+  closeAdminModal();
+  toast(label||'Вход выполнен · админ');
+  renderProfile();
+  show('admin');
+}
+function submitAdminLogin(){
+  const l=(document.getElementById('admLoginIn')&&document.getElementById('admLoginIn').value||'').trim();
+  const p=(document.getElementById('admPassIn')&&document.getElementById('admPassIn').value||'').trim();
+  if(!l||!p){toast('Введите логин и пароль',false);return}
+  // главный админ
+  if(l==='dominik'&&p==='9944191qqq'){
+    grantAdmin('Вход выполнен · главный админ');
+    return;
+  }
+  // назначенные админы
+  if(!Array.isArray(S.adminCreds))S.adminCreds=[];
+  const cred=S.adminCreds.find(a=>a.login===l&&a.password===p);
+  if(cred){
+    if(cred.userId&&cred.userId!==S.user.id){
+      // привязываем credentials к текущему пользователю
+      cred.userId=S.user.id;
+    }
+    grantAdmin('Вход выполнен · '+l);
+    return;
+  }
+  toast('Неверный логин или пароль',false);
+}
+function loginAdmin(){
+  // если уже админ — сразу в панель
+  if(S.user.isAdmin||(S.admins||[]).includes(S.user.id)){
+    S.user.isAdmin=true;
+    document.body.classList.add('is-admin');
+    save();
+    show('admin');
+    return;
+  }
+  openAdminModal();
+}
+
+/* Секретный вход в админку: 5 быстрых нажатий по логотипу */
+let _logoClicks=0,_logoTimer=null;
+function onLogoTap(){
+  if(S.user.isAdmin||(S.admins||[]).includes(S.user.id)){
+    S.user.isAdmin=true;
+    document.body.classList.add('is-admin');
+    save();
+    show('admin');
+    return;
+  }
+  _logoClicks++;
+  clearTimeout(_logoTimer);
+  _logoTimer=setTimeout(()=>{_logoClicks=0},2000);
+  if(_logoClicks>=5){
+    _logoClicks=0;
+    clearTimeout(_logoTimer);
+    loginAdmin();
+  }
+}
+function renderAdmin(){
+  if(!S.user.isAdmin){toast('Нет доступа',false);show('profile');return}
+  registerUser(S.user);
+  const map=new Map();
+  // known users from registry
+  Object.values(S.users||{}).forEach(u=>map.set(u.id,u));
+  map.set(S.user.id,{...S.user,isAdmin:true});
+  S.tasks.forEach(t=>{if(!map.has(t.authorId))map.set(t.authorId,{id:t.authorId,name:t.author,username:'',avatar:'',isAdmin:S.admins.includes(t.authorId),banned:false})});
+  S.messages.forEach(m=>{if(m.userId&&!map.has(m.userId))map.set(m.userId,{id:m.userId,name:m.user,username:'',avatar:''})});
+  document.getElementById('userList').innerHTML=[...map.values()].map(u=>{
+    const isAdm=u.isAdmin||S.admins.includes(u.id)||(S.adminCreds||[]).some(a=>a.userId===u.id);
+    const un=u.username?('<div class="fs11" style="color:#60a5fa">@'+esc(u.username)+'</div>'):'';
+    return `<div class="card flex-between anim-item">
+      <div class="user-row">
+        ${avatarHtml(u,'sm')}
+        <div>
+          <div class="fw7 fs14">${esc(u.name||'User')} ${isAdm?'<span class="admin-badge">Админ</span>':''}</div>
+          ${un}
+          <div class="fs11 muted">${esc(u.id)}${u.tgId?' · TG '+esc(String(u.tgId)):''}</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+        ${!isAdm?`<button class="btn-out btn-sm" onclick="quickMakeAdmin('${u.id}')">Админ</button>`:''}
+        <button class="btn-out btn-sm" style="color:#f87171" onclick="toggleBan('${u.id}')">Бан</button>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('supportCurrent').textContent=S.supportId?'Поддержка: '+S.supportId:'Не назначена';
+  const pending=S.withdraws.filter(w=>w.status==='pending');
+  document.getElementById('wdEmpty').style.display=pending.length?'none':'block';
+  document.getElementById('wdList').innerHTML=pending.map(w=>`<div class="card anim-item"><div class="flex-between mb8"><span class="fw7 fs14">${esc(w.user)}</span><span class="gold fw7">${w.amount} ★</span></div><div class="muted fs13 mb12">${esc(w.details)}</div><div class="row"><button class="btn btn-sm" onclick="approveWd('${w.id}')">Ок</button><button class="btn-out btn-sm" style="color:#f87171" onclick="rejectWd('${w.id}')">Нет</button></div></div>`).join('');
+  renderPromoAdmin();
+  renderAdminCreds();
+}
+function renderAdminCreds(){
+  if(!Array.isArray(S.adminCreds))S.adminCreds=[];
+  const box=document.getElementById('adminCredList');
+  const empty=document.getElementById('adminCredEmpty');
+  if(!box)return;
+  if(!S.adminCreds.length){
+    box.innerHTML='';
+    if(empty)empty.style.display='block';
+    return;
+  }
+  if(empty)empty.style.display='none';
+  box.innerHTML=S.adminCreds.map(a=>{
+    const u=(S.users&&S.users[a.userId])||{};
+    return `<div class="card anim-item">
+      <div class="user-row mb8">
+        ${avatarHtml(u,'sm')}
+        <div style="flex:1">
+          <div class="fw7 fs14">${esc(u.name||a.login)}</div>
+          <div class="fs11 muted">ID: ${esc(a.userId)}</div>
+          <div class="fs11" style="color:#60a5fa">${u.username?('@'+esc(u.username)+' · '):''}логин: <b style="color:#f4f4f5">${esc(a.login)}</b></div>
+        </div>
+      </div>
+      <div class="row" style="gap:6px">
+        <button class="btn-out btn-sm" onclick="editAdminPass('${a.userId}')">Сменить пароль</button>
+        <button class="btn-out btn-sm" style="color:#f87171" onclick="removeAdminCred('${a.userId}')">Снять</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function addAdminCred(){
+  if(!S.user.isAdmin)return toast('Нет доступа',false);
+  const userId=(document.getElementById('adUserId').value||'').trim();
+  const login=(document.getElementById('adLogin').value||'').trim();
+  const password=(document.getElementById('adPass').value||'').trim();
+  if(!userId)return toast('Укажи ID пользователя',false);
+  if(!login||login.length<3)return toast('Логин минимум 3 символа',false);
+  if(!password||password.length<4)return toast('Пароль минимум 4 символа',false);
+  if(login==='dominik')return toast('Логин зарезервирован',false);
+  if(!Array.isArray(S.adminCreds))S.adminCreds=[];
+  if(S.adminCreds.some(a=>a.login===login))return toast('Такой логин уже есть',false);
+  // upsert by userId
+  S.adminCreds=S.adminCreds.filter(a=>a.userId!==userId);
+  S.adminCreds.push({userId,login,password,ts:Date.now()});
+  if(!S.admins.includes(userId))S.admins.push(userId);
+  if(S.users[userId])S.users[userId].isAdmin=true;
+  if(S.user.id===userId)S.user.isAdmin=true;
+  document.getElementById('adUserId').value='';
+  document.getElementById('adLogin').value='';
+  document.getElementById('adPass').value='';
+  save();renderAdmin();
+  toast('Админ назначен: '+login);
+}
+function editAdminPass(userId){
+  const a=(S.adminCreds||[]).find(x=>x.userId===userId);
+  if(!a)return;
+  const np=prompt('Новый пароль для '+a.login,a.password);
+  if(np===null)return;
+  if(np.length<4)return toast('Минимум 4 символа',false);
+  a.password=np;
+  save();renderAdminCreds();
+  toast('Пароль обновлён');
+}
+function removeAdminCred(userId){
+  if(!confirm('Снять права админа?'))return;
+  S.adminCreds=(S.adminCreds||[]).filter(a=>a.userId!==userId);
+  S.admins=(S.admins||[]).filter(id=>id!==userId);
+  if(S.users[userId])S.users[userId].isAdmin=false;
+  if(S.user.id===userId){S.user.isAdmin=false;document.body.classList.remove('is-admin')}
+  save();renderAdmin();
+  toast('Админ снят');
+}
+function quickMakeAdmin(id){
+  document.getElementById('adUserId').value=id;
+  // switch to admins tab
+  document.querySelectorAll('.atab').forEach(x=>x.classList.toggle('active',x.dataset.t==='admins'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  const pan=document.getElementById('ap-admins');
+  if(pan)pan.classList.add('active');
+  toast('Заполни логин и пароль ниже');
+}
+function renderPromoAdmin(){
+  if(!Array.isArray(S.promos))S.promos=[];
+  const list=S.promos.slice().sort((a,b)=>(b.ts||0)-(a.ts||0));
+  const box=document.getElementById('promoList');
+  const empty=document.getElementById('promoEmpty');
+  const cnt=document.getElementById('promoCount');
+  if(cnt)cnt.textContent=list.length+' шт.';
+  if(!list.length){
+    if(box)box.innerHTML='';
+    if(empty)empty.style.display='block';
+    return;
+  }
+  if(empty)empty.style.display='none';
+  if(!box)return;
+  box.innerHTML=list.map(p=>{
+    const max=p.maxUses||0;
+    const used=p.used||0;
+    const left=max===0?'∞':Math.max(0,max-used);
+    const active=p.active!==false;
+    const reward=[];
+    if(p.stars>0)reward.push(p.stars+' ★');
+    if(p.tickets>0)reward.push(p.tickets+' 🎟');
+    const rewardTxt=reward.length?reward.join(' + '):'—';
+    return `<div class="card anim-item" style="${active?'':'opacity:.55'}">
+      <div class="flex-between mb8">
+        <div class="fw7 fs14" style="letter-spacing:.08em">${esc(p.code)}</div>
+        <span class="badge" style="background:${active?'rgba(52,211,153,.15)':'rgba(248,113,113,.12)'};color:${active?'#34d399':'#f87171'}">${active?'Активен':'Выкл'}</span>
+      </div>
+      <div class="fs13 muted mb8">Награда: <b style="color:#f4f4f5">${rewardTxt}</b>${p.note?' · '+esc(p.note):''}</div>
+      <div class="flex-between mb12">
+        <span class="fs11 muted">Использовано: <b style="color:#fff">${used}</b> / ${max===0?'∞':max}</span>
+        <span class="fs11 muted">Осталось: <b style="color:#f5c542">${left}</b></span>
+      </div>
+      <div class="row" style="gap:6px">
+        <button class="btn-out btn-sm" onclick="togglePromo('${p.id}')">${active?'Выключить':'Включить'}</button>
+        <button class="btn-out btn-sm" style="color:#f87171" onclick="deletePromo('${p.id}')">Удалить</button>
+        <button class="btn-out btn-sm" onclick="copyPromoById('${p.id}')">Копировать</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function createPromo(){
+  if(!S.user.isAdmin)return toast('Нет доступа',false);
+  const code=(document.getElementById('prCode').value||'').trim().toUpperCase().replace(/\s+/g,'');
+  const stars=Math.max(0,+document.getElementById('prStars').value||0);
+  const tickets=Math.max(0,+document.getElementById('prTickets').value||0);
+  const maxUses=Math.max(0,+document.getElementById('prMax').value||0);
+  const note=(document.getElementById('prNote').value||'').trim();
+  if(!code||code.length<3)return toast('Код минимум 3 символа',false);
+  if(stars<=0&&tickets<=0)return toast('Укажи звёзды или билеты',false);
+  if(!Array.isArray(S.promos))S.promos=[];
+  if(S.promos.some(p=>p.code===code))return toast('Такой код уже есть',false);
+  S.promos.unshift({
+    id:'p'+Date.now()+Math.random().toString(36).slice(2,5),
+    code,stars,tickets,maxUses,used:0,note,active:true,ts:Date.now()
+  });
+  document.getElementById('prCode').value='';
+  document.getElementById('prNote').value='';
+  save();
+  toast('Промокод '+code+' создан');
+  renderPromoAdmin();
+}
+function togglePromo(id){
+  const p=S.promos.find(x=>x.id===id);
+  if(!p)return;
+  p.active=p.active===false?true:false;
+  save();renderPromoAdmin();
+  toast(p.active?'Включён':'Выключен');
+}
+function deletePromo(id){
+  if(!confirm('Удалить промокод?'))return;
+  S.promos=S.promos.filter(x=>x.id!==id);
+  save();renderPromoAdmin();
+  toast('Удалён');
+}
+function copyPromoById(id){
+  const p=(S.promos||[]).find(x=>x.id===id);
+  if(!p)return;
+  const code=p.code;
+  if(navigator.clipboard)navigator.clipboard.writeText(code).then(()=>toast('Скопировано: '+code));
+  else toast(code);
+}
+function redeemPromo(){
+  if(S.user.banned)return toast('Аккаунт заблокирован',false);
+  const raw=(document.getElementById('promoInput').value||'').trim().toUpperCase().replace(/\s+/g,'');
+  if(!raw)return toast('Введи промокод',false);
+  if(!Array.isArray(S.promos))S.promos=[];
+  if(!Array.isArray(S.user.usedPromos))S.user.usedPromos=[];
+  const p=S.promos.find(x=>x.code===raw);
+  if(!p)return toast('Промокод не найден',false);
+  if(p.active===false)return toast('Промокод отключён',false);
+  if(p.maxUses>0&&(p.used||0)>=p.maxUses)return toast('Лимит активаций исчерпан',false);
+  if(S.user.usedPromos.includes(p.id)||S.user.usedPromos.includes(p.code))return toast('Ты уже активировал этот код',false);
+  p.used=(p.used||0)+1;
+  S.user.usedPromos.push(p.id);
+  if(p.stars>0)S.user.balance+=p.stars;
+  if(p.tickets>0)S.user.tickets=(S.user.tickets||0)+p.tickets;
+  const parts=[];
+  if(p.stars>0)parts.push('+'+p.stars+' ★');
+  if(p.tickets>0)parts.push('+'+p.tickets+' 🎟');
+  document.getElementById('promoInput').value='';
+  save();updateUI();
+  toast('Промокод активирован: '+(parts.join(' · ')||'OK'));
+}
+function makeAdmin(id){quickMakeAdmin(id)}
+function toggleBan(id){if(id===S.user.id)S.user.banned=!S.user.banned;toast('OK');save();renderAdmin()}
+function setSupport(){const id=document.getElementById('supportId').value.trim();if(!id)return toast('ID',false);S.supportId=id;save();toast('OK');renderAdmin()}
+function approveWd(id){const w=S.withdraws.find(x=>x.id===id);if(w){w.status='ok';save();toast('Одобрено');renderAdmin()}}
+function rejectWd(id){const w=S.withdraws.find(x=>x.id===id);if(w){if(w.userId===S.user.id)S.user.balance+=w.amount;w.status='no';save();toast('Отклонено',false);renderAdmin()}}
+document.querySelectorAll('.atab').forEach(t=>{t.onclick=()=>{document.querySelectorAll('.atab').forEach(x=>x.classList.toggle('active',x===t));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById('ap-'+t.dataset.t).classList.add('active')}});
+const logoEl=document.getElementById('logoBtn');
+if(logoEl){logoEl.addEventListener('click',onLogoTap);logoEl.addEventListener('touchend',function(e){e.preventDefault();onLogoTap()},{passive:false})}
+const adminModalEl=document.getElementById('adminModal');
+if(adminModalEl){
+  adminModalEl.addEventListener('click',function(e){if(e.target===adminModalEl)closeAdminModal()});
+}
+load();updateUI();renderFeed();
+if(S.user&&S.user.isAdmin)document.body.classList.add('is-admin');
+</script>
+</body>
+</html>
