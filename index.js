@@ -449,3 +449,53 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => console.log('Star of Olimp on port', PORT));
+// ===== Реальные платежи Telegram Stars =====
+app.post('/api/create-invoice', async (req, res) => {
+  try {
+    const { amount, bonus = 0, type, ticketsCount = 0, userId } = req.body;
+    if (!amount || amount < 1) return res.status(400).json({ error: 'Некорректная сумма' });
+
+    const BOT_TOKEN = process.env.BOT_TOKEN;
+    if (!BOT_TOKEN) return res.status(500).json({ error: 'BOT_TOKEN не настроен' });
+
+    const title = type === 'tickets'
+      ? `${ticketsCount} билет(ов)`
+      : `Пополнение ${amount} ★`;
+
+    const description = type === 'tickets'
+      ? 'Покупка билетов Star of Olimp'
+      : 'Пополнение баланса Star of Olimp';
+
+    const payload = JSON.stringify({
+      userId,
+      type,
+      amount,
+      bonus,
+      ticketsCount,
+      ts: Date.now()
+    });
+
+    const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/createInvoiceLink`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title,
+        description,
+        payload,
+        currency: 'XTR',
+        prices: [{ label: title, amount: amount }]
+      })
+    });
+
+    const data = await response.json();
+    if (!data.ok) {
+      console.error('Telegram error:', data);
+      return res.status(500).json({ error: data.description || 'Ошибка создания счёта' });
+    }
+
+    res.json({ invoiceLink: data.result });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
